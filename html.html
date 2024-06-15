@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presente Surpresa 3D</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e0e0e0;
+            margin: 0;
+            perspective: 1000px;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        .scene {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .box {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        .box div {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: #283593; /* Azul escuro */
+            border: 2px solid #1a237e; /* Azul mais escuro */
+        }
+
+        .front  { transform: translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .right  { transform: rotateY(90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        .top {
+            background-color: #f48fb1; /* Rosa */
+            transform: rotateX(90deg) translateZ(100px);
+            transform-origin: bottom;
+            transition: transform 1s;
+        }
+
+        .scene.open .top {
+            transform: rotateX(0deg) translateZ(100px);
+        }
+
+        .ribbon-horizontal {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background-color: #9c27b0; /* Roxo claro */
+            top: 90px;
+        }
+
+        .ribbon-vertical {
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            background-color: #9c27b0; /* Roxo claro */
+            left: 90px;
+        }
+
+        .bow {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #9c27b0; /* Roxo claro */
+            top: -25px;
+            left: calc(50% - 25px);
+            border-radius: 50%;
+        }
+
+        .bow:before, .bow:after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #9c27b0; /* Roxo claro */
+            border-radius: 50%;
+        }
+
+        .bow:before {
+            left: -50px;
+        }
+
+        .bow:after {
+            right: -50px;
+        }
+
+        .letter {
+            position: absolute;
+            width: 100px;
+            height: 60px;
+            background-color: white;
+            top: 120px;
+            left: calc(50% - 50px);
+            border: 2px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform-origin: bottom;
+            transform: translateY(0);
+            transition: transform 1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #e53935;
+        }
+
+        .scene.open .letter {
+            transform: translateY(-200px);
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .message {
+            display: none;
+            margin-top: 20px;
+            font-size: 24px;
+            color: #e53935;
+        }
+
+        .star {
+            position: absolute;
+            bottom: 200px;
+            width: 20px;
+            height: 20px;
+            background-color: #e53935;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: fall 2s infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(500px) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="scene" id="scene">
+            <div class="box">
+                <div class="front"></div>
+                <div class="back"></div>
+                <div class="left"></div>
+                <div class="right"></div>
+                <div class="top" id="top"></div>
+                <div class="bottom"></div>
+            </div>
+            <div class="ribbon-horizontal"></div>
+            <div class="ribbon-vertical"></div>
+            <div class="bow"></div>
+            <div class="letter" id="letter">Cookies!</div>
+        </div>
+        <div class="buttons">
+            <button onclick="openGift()">Open</button>
+            <button onclick="resetGift()">Reset</button>
+        </div>
+    </div>
+    <script>
+        function openGift() {
+            const scene = document.getElementById('scene');
+            const letter = document.getElementById('letter');
+            scene.classList.add('open');
+            letter.style.display = 'flex';
+
+            // Adding stars animation
+            const container = document.querySelector('.container');
+            for (let i = 0; i < 20; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                container.appendChild(star);
+            }
+        }
+
+        function resetGift() {
+            const scene = document.getElementById('scene');
+            const letter = document.getElementById('letter');
+            scene.classList.remove('open');
+            letter.style.display = 'none';
+
+            // Removing stars animation
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => star.remove());
+        }
+    </script>
+</body>
+</html>
